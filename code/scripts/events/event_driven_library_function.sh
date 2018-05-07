@@ -19,7 +19,7 @@ publish_event(){
     ##accepted values of event state RUNNING,FAILED,SUCCEDED
     _event_state=$2
     ##event timestamp 
-    _event_time=`date '+%Y%m%d%H%M%S'`
+    _event_time=`date '+%Y%m%d'`
 
     ##check if the event is registered
     is_event_registered $1
@@ -47,7 +47,7 @@ publish_event(){
     fi
 
 #    _command="aws s3 cp ${_tmp_file} ${_event_state_directory}"
-    _command='aws s3 cp'" ${_tmp_file} ${_event_state_directory}"
+    _command='aws s3 cp'" ${_tmp_file} ${_event_state_directory}/"
 
     echo "${_command}"
 
