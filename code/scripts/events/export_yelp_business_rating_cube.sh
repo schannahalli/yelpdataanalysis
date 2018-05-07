@@ -1,11 +1,11 @@
 #!/bin/bash
 
 _sql_base_dir="/home/ec2-user/yelpdataanalysis/code/scripts/static/"
-_sql_script="yelp_stg_layer_ddl.sql"
+_sql_script="yelp_export_cube_ddl.sql"
 _base_dir="/home/ec2-user/yelpdataanalysis/code/scripts/events"
 
 source $_base_dir/event_driven_library_function.sh
-__event_name="generate_yelp_business_stage_data"
+__event_name="export_yelp_business_rating_cube"
 
 
 _state=RUNNING
@@ -23,10 +23,10 @@ echo "Exceuting ${_command}"
 eval ${_command}
 _retval=$?
 if [ "${retval}" = "0" ]; then
-    echo "successfully executed stage layer"
+    echo "successfully executed export cube"
     _state=SUCCEDED
 else
-    echo "failed to executed stage layer"
+    echo "failed to executed export cube"
     _state=FAILED
 fi
 

@@ -22,14 +22,15 @@ create database if not exists yelp_cubes ;
 create table if not exists yelp_cubes.yelp_business_rating_cube(
       name string,
       postal_code string,
-      stars string
+      stars string,
+      datestr string
 )
 partitioned by (state string)
 stored as orc
 ;
 
 set hive.exec.dynamic.partition.mode=nonstrict;
-insert overwrite table yelp_cubes.yelp_business_rating_cube partition(state)
-select name,postal_code,stars,state from ( select name,postal_code,state,stars,business_type from yelp_staging.stg_yelp_business_object lateral view explode (categories) exploded_table as business_type ) t where upper(t.business_type) like '%PIZZA%' ;
+insert into table yelp_cubes.yelp_business_rating_cube partition(state)
+select name,postal_code,stars,datestr,state from ( select name,postal_code,state,stars,business_type,datestr from yelp_staging.stg_yelp_business_object lateral view explode (categories) exploded_table as business_type ) t where upper(t.business_type) like '%PIZZA%' ;
 
 

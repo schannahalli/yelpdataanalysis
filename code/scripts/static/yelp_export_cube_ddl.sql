@@ -29,7 +29,6 @@ STORED AS TEXTFILE
 LOCATION 's3n://markev-developer-test/devtest-sharat/repository/ETL/db/yelp_outgoing_files/ext_yelp_business_rating_cube2';
 
 
-
 insert overwrite table yelp_outgoing_cubes.ext_yelp_business_rating_cube2 
-select name,cast(postal_code as int) as postal_code,cast(stars as double) as rating from yelp_cubes.yelp_business_rating_cube where (nvl(postal_code,'x') !='x' or trim(postal_code) != '' and postal_code rlike '[^0-9]') or (nvl(name,'x') !='x' or trim(name) != '') or (nvl(stars,'x') !='x' or trim(stars) != '' and stars rlike '[^0-9.]') ;
+select name,postal_code,rating from (select name,cast(postal_code as int) as postal_code,cast(stars as double) as rating ,rank() over (partition by name,postal_code order by datestr desc) as rank from yelp_cubes.yelp_business_rating_cube where (nvl(postal_code,'x') !='x' or trim(postal_code) != '' and postal_code rlike '[^0-9]') or (nvl(name,'x') !='x' or trim(name) != '') or (nvl(stars,'x') !='x' or trim(stars) != '' and stars rlike '[^0-9.]')) t where t.rank = 1 ;
 
